@@ -61,6 +61,7 @@ type remote struct {
 
 // New creates a fresh instance of libcontainerd remote.
 func New(stateDir string, options ...RemoteOption) (_ Remote, err error) {
+	fmt.Printf("libcontainerd new:%+v, %+v\n\n", stateDir, options)
 	defer func() {
 		if err != nil {
 			err = fmt.Errorf("Failed to connect to containerd. Please make sure containerd is installed in your PATH or you have specificed the correct address. Got error: %v", err)
