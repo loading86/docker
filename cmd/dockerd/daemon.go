@@ -88,6 +88,9 @@ func migrateKey() (err error) {
 	// Migrate trust key if exists at ~/.docker/key.json and owned by current user
 	oldPath := filepath.Join(cliconfig.ConfigDir(), cliflags.DefaultTrustKeyFile)
 	newPath := filepath.Join(getDaemonConfDir(), cliflags.DefaultTrustKeyFile)
+	fmt.Printf("migrateKey:\n")
+	fmt.Printf("oldPath:%+v\n", oldPath)
+	fmt.Printf("newPath:%+v\n", newPath)
 	if _, statErr := os.Stat(newPath); os.IsNotExist(statErr) && currentUserIsOwner(oldPath) {
 		defer func() {
 			// Ensure old path is removed if no error occurred
@@ -144,10 +147,12 @@ func (cli *DaemonCli) start() (err error) {
 	}
 	cli.Config = cliConfig
 
+	//set DEBUG=1 into environment, set log level to debug
 	if cli.Config.Debug {
 		utils.EnableDebug()
 	}
 
+	//do nothing
 	if utils.ExperimentalBuild() {
 		logrus.Warn("Running experimental build")
 	}
@@ -157,6 +162,7 @@ func (cli *DaemonCli) start() (err error) {
 		DisableColors:   cli.Config.RawLogs,
 	})
 
+	//set umask to 0022
 	if err := setDefaultUmask(); err != nil {
 		return fmt.Errorf("Failed to set umask: %v", err)
 	}
@@ -167,6 +173,7 @@ func (cli *DaemonCli) start() (err error) {
 		}
 	}
 
+	//create pidfile, remove when exit
 	if cli.Pidfile != "" {
 		pf, err := pidfile.New(cli.Pidfile)
 		if err != nil {
