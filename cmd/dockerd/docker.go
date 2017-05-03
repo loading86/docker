@@ -45,6 +45,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	fmt.Printf("Config:\n")
+	fmt.Printf("%+v\n\n", *(daemonCli.Config))
+	fmt.Printf("commonFlags:\n")
+	fmt.Printf("%+v\n\n", *(daemonCli.commonFlags))
+	fmt.Printf("configFile:\n")
+	fmt.Printf("%+v\n\n", *(daemonCli.configFile))
 	if *flVersion {
 		showVersion()
 		return
