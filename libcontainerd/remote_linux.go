@@ -62,6 +62,7 @@ type remote struct {
 // New creates a fresh instance of libcontainerd remote.
 func New(stateDir string, options ...RemoteOption) (_ Remote, err error) {
 	fmt.Printf("libcontainerd new:%+v, %+v\n\n", stateDir, options)
+	//when ./dockerd, print libcontainerd new:/var/run/docker/libcontainerd, [false -500 true docker-runc]
 	defer func() {
 		if err != nil {
 			err = fmt.Errorf("Failed to connect to containerd. Please make sure containerd is installed in your PATH or you have specificed the correct address. Got error: %v", err)
@@ -85,6 +86,7 @@ func New(stateDir string, options ...RemoteOption) (_ Remote, err error) {
 	if r.rpcAddr == "" {
 		r.rpcAddr = filepath.Join(stateDir, containerdSockFilename)
 	}
+	fmt.Printf("libcontainerd new rpcAddr:%+v", r.rpcAddr)
 
 	if r.startDaemon {
 		if err := r.runContainerdDaemon(); err != nil {
@@ -99,6 +101,7 @@ func New(stateDir string, options ...RemoteOption) (_ Remote, err error) {
 			return net.DialTimeout("unix", addr, timeout)
 		}),
 	)
+	fmt.Printf("libcontainerd new rpcAddr:%+v, dialOpts:%+v", r.rpcAddr, dialOpts)
 	conn, err := grpc.Dial(r.rpcAddr, dialOpts...)
 	if err != nil {
 		return nil, fmt.Errorf("error connecting to containerd: %v", err)
