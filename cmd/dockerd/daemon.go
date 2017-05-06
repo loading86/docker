@@ -240,15 +240,18 @@ func (cli *DaemonCli) start() (err error) {
 		}
 		ls, err := listeners.Init(proto, addr, serverConfig.SocketGroup, serverConfig.TLSConfig)
 		if err != nil {
+			fmt.Printf("listeners.Init failed:%+v\n", err)
 			return err
 		}
 		ls = wrapListeners(proto, ls)
 		// If we're binding to a TCP port, make sure that a container doesn't try to use it.
 		if proto == "tcp" {
 			if err := allocateDaemonPort(addr); err != nil {
+				fmt.Printf("allocateDaemonPort failed:%+v\n", err)
 				return err
 			}
 		}
+		fmt.Printf("listen succ")
 		logrus.Debugf("Listener created for HTTP on %s (%s)", protoAddrParts[0], protoAddrParts[1])
 		api.Accept(protoAddrParts[1], ls...)
 	}
