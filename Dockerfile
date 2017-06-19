@@ -247,15 +247,16 @@ RUN set -x \
 ENV CONTAINERD_COMMIT 0ac3cd1be170d180b2baed755e8f0da547ceb267
 RUN set -x \
 	&& export GOPATH="$(mktemp -d)" \
-	&& git clone https://github.com/docker/containerd.git "$GOPATH/src/github.com/docker/containerd" \
+	&& echo 1497175286  \
+	&& git clone https://github.com/loading86/containerd.git "$GOPATH/src/github.com/docker/containerd" \
 	&& cd "$GOPATH/src/github.com/docker/containerd" \
-	&& git checkout -q "$CONTAINERD_COMMIT" \
+	&& git checkout -q mycontainerd \
+        #&& git pull origin mycontainerd \
 	&& make static \
 	&& cp bin/containerd /usr/local/bin/docker-containerd \
 	&& cp bin/containerd-shim /usr/local/bin/docker-containerd-shim \
 	&& cp bin/ctr /usr/local/bin/docker-containerd-ctr \
 	&& rm -rf "$GOPATH"
-
 # Wrap all commands in the "docker-in-docker" script to allow nested containers
 ENTRYPOINT ["hack/dind"]
 
